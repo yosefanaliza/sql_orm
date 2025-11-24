@@ -6,12 +6,13 @@ from models import User
 def create_user(session: Session, name: str, email: str, age: Optional[int] = None):
     """CREATE - Add a new user to the database"""
     user = User(name=name, email=email, age=age)
+
     session.add(user)
     session.commit()
 
     # NOTE: Refresh to get the generated ID
     session.refresh(user)
-    
+
     print(f"✓ Created user: {user.name} (ID: {user.id})")
     return user
 
@@ -85,3 +86,21 @@ def delete_user(session: Session, user_id: Optional[int]):
     session.commit()
     print(f"✓ Deleted user: {user.name} (ID: {user_id})")
     return True
+
+def read_users_specific_columns(session: Session, columns: list[str]):
+    """READ - Get specific columns from all users"""
+
+    # This makes sure the attributes exist on the User model
+    user_attrs = [getattr(User, col) for col in columns if hasattr(User, col)]
+
+    statement = select(*user_attrs)
+    results = session.exec(statement).all()
+    
+    print(f"\n📋 Found {len(results)} users (columns: {', '.join(columns)}):")
+    for result in results:
+        # Handle both single column and multiple columns
+        if len(user_attrs) == 1:
+            print(f"  - {result}")
+        else:
+            print(f"  - {result}")
+    return results
