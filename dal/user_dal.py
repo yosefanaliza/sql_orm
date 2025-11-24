@@ -8,7 +8,7 @@ def create_user(session: Session, name: str, email: str, age: Optional[int] = No
     user = User(name=name, email=email, age=age)
     session.add(user)
     session.commit()
-    session.refresh(user)
+    session.refresh(user) # TODO: research this
     print(f"✓ Created user: {user.name} (ID: {user.id})")
     return user
 

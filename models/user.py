@@ -12,4 +12,3 @@ class User(SQLModel, table=True):
     age: Optional[int] = None
     is_active: bool = Field(default=True)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
